@@ -1,54 +1,35 @@
-// Import the Puppeteer library
-const puppeteer = require('puppeteer');
-
 // Function to scrape the page and send data to the background script
-async function scrapeAndSendMessage() {
-  try {
-    // Launch a headless browser instance
-    const browser = await puppeteer.launch();
+function scrapeAndSendMessage() {
+  // Select all the desired elements on the page
+  const elements = document.querySelectorAll('.cd-search-jss216');
 
-    // Open a new page
-    const page = await browser.newPage();
+  // Create an array to store the extracted data
+  const scrapedData = [];
 
-    // Navigate to the desired URL
-    await page.goto('https://app.centraldispatch.com/search');
+  // Loop through each element and extract the required data
+  elements.forEach((element) => {
+    const listingId = element.getAttribute('data-listing-id');
+    const priceElement = element.querySelector('.cd-search-jss271');
+    const price = priceElement ? priceElement.textContent.trim() : '';
+    const locationElement = element.querySelector('.cd-search-jss310');
+    const location = locationElement ? locationElement.textContent.trim() : '';
+    const companyNameElement = element.querySelector('.cd-search-jss460');
+    const companyName = companyNameElement ? companyNameElement.textContent.trim() : '';
 
-    // Wait for the desired elements to appear on the page
-    await page.waitForSelector('.cd-search-jss79.cd-search-jss81');
+    // Create an object with the extracted data
+    const data = {
+      listingId,
+      price,
+      location,
+      companyName,
+    };
 
-    // Select all the desired elements on the page
-    const elements = await page.$$('.cd-search-jss79.cd-search-jss81');
+    // Push the object to the scrapedData array
+    scrapedData.push(data);
+  });
 
-    // Create an array to store the extracted data
-    const scrapedData = [];
-
-    // Loop through each element and extract the required data
-    for (const element of elements) {
-      const listingId = await element.$eval('.cd-search-jss134', (el) => el.textContent.trim());
-      const price = await element.$eval('.cd-search-jss134', (el) => el.textContent.trim());
-      const location = await element.$eval('.cd-search-jss160.cd-search-jss157', (el) => el.textContent.trim());
-      const companyName = await element.$eval('.cd-search-jss166.cd-search-jss171', (el) => el.textContent.trim());
-
-      // Create an object with the extracted data
-      const data = {
-        listingId,
-        price,
-        location,
-        companyName,
-      };
-
-      // Push the object to the scrapedData array
-      scrapedData.push(data);
-    }
-
-    // Send the scrapedData to the background script
-    chrome.runtime.sendMessage({ data: scrapedData });
-
-    // Close the browser instance
-    await browser.close();
-  } catch (error) {
-    console.error('Error occurred during scraping:', error);
-  }
+  // Send the scrapedData to the background script
+  chrome.runtime.sendMessage({ data: scrapedData });
 }
 
 // Reload the page after it has been initially loaded
