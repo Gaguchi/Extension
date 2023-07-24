@@ -1,36 +1,36 @@
 {
-    "manifest_version": 3,
-    "name": "Listing Checker",
-    "version": "1.0",
-    "permissions": [
-      "activeTab",
-      "scripting",
-      "host:app.centraldispatch.com"
-    ],
-    "action": {
-      "default_popup": "popup.html",
-      "default_icon": {
-        "16": "icon.png",
-        "48": "icon.png",
-        "128": "icon.png"
-      }
-    },
-    "icons": {
+  "manifest_version": 3,
+  "name": "Listing Checker",
+  "version": "1.0",
+  "host_permissions": [
+    "https://app.centraldispatch.com/*" 
+  ],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "alarms"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
       "16": "icon.png",
       "48": "icon.png",
       "128": "icon.png"
-    },
-    "host_permissions": [
-      "https://app.centraldispatch.com/*"
-    ],
-    "background": {
-      "service_worker": "background.js"
-    },
-    "content_scripts": [
-      {
-        "matches": ["https://app.centraldispatch.com/search*"],
-        "js": ["contentScript.js"]
-      }
-    ]
+    }
+  },
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://app.centraldispatch.com/search*"],
+      "js": ["contentScript.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
   }
-  
+}

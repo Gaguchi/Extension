@@ -1,3 +1,5 @@
+// content.js
+
 // Function to inject the contentScript.js file into the page
 function injectContentScript() {
     const script = document.createElement('script');
