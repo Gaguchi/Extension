@@ -1,8 +1,8 @@
-let scrapingActive = false; // Flag to keep track of whether scraping is currently active
+console.log("popup is running");
 
 // Function to fetch the scraped data from the background script and update the popup.html
 function fetchScrapedData() {
-  chrome.runtime.sendMessage({ getData: true }, function (response) {
+  chrome.runtime.sendMessage({ getData: true }, function(response) {
     if (chrome.runtime.lastError) {
       console.error(chrome.runtime.lastError);
       return;
@@ -25,55 +25,44 @@ function fetchScrapedData() {
   });
 }
 
-// Function to toggle the scraping state
+// Initiate or stop the scraping
 function toggleScraping() {
-  scrapingActive = !scrapingActive;
+  chrome.storage.sync.get(['scrapingActive', 'scrapeTabId'], function(data) {
+    const isScrapingActive = data.scrapingActive;
 
-  // Send a message to the content script to toggle the scraping state
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    const currentTab = tabs[0];
-    chrome.tabs.sendMessage(currentTab.id, { toggleScraping: scrapingActive }, function (response) {
-      if (chrome.runtime.lastError) {
-        console.error(chrome.runtime.lastError);
-        return;
-      }
+    if (!isScrapingActive) {
+      // Get the current active tab
+      chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        const currentTab = tabs[0];
+        
+        // Store the tab ID
+        chrome.storage.sync.set({ scrapeTabId: currentTab.id, scrapingActive: true });
 
-      // Update the button text based on the response
-      const scrapeButton = document.getElementById('scrape-button');
-      scrapeButton.textContent = response.scrapingActive ? 'Stop Scraping' : 'Start Scraping';
-    });
+        // Create an alarm to initiate scraping at regular intervals
+        chrome.alarms.create('scrapeAlarm', { periodInMinutes: 0.1667 }); // 10 seconds
+
+        document.getElementById('scrape-button').textContent = 'Stop Scraping';
+      });
+    } else {
+      // Clear the stored tab ID and stop scraping
+      chrome.storage.sync.set({ scrapeTabId: null, scrapingActive: false });
+
+      // Clear the alarm
+      chrome.alarms.clear('scrapeAlarm');
+
+      document.getElementById('scrape-button').textContent = 'Start Scraping';
+    }
   });
 }
 
-// Function to handle messages from the background script
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.scrapingState !== undefined) {
-    // Update the local variable with the new state
-    scrapingActive = request.scrapingState;
-
-    // Update the button text based on the new state
-    const scrapeButton = document.getElementById('scrape-button');
-    scrapeButton.textContent = scrapingActive ? 'Stop Scraping' : 'Start Scraping';
-
-    // Acknowledge the message
-    sendResponse({ message: 'Scraping state updated successfully' });
-  }
-});
 
 // Wait for the DOM to be fully loaded before adding the event listener
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
   // Fetch the scraped data from the background script when the popup is opened
   fetchScrapedData();
-
+  
   // Add event listener to the "Scrape Data" button
-  const scrapeButton = document.getElementById('scrape-button');
-  scrapeButton.addEventListener('click', function () {
+  document.getElementById('scrape-button').addEventListener('click', function() {
     toggleScraping();
-  });
-
-  // Retrieve the scraping state from storage and update the button text accordingly
-  chrome.storage.local.get('scrapingActive', function (data) {
-    scrapingActive = data.scrapingActive || false;
-    scrapeButton.textContent = scrapingActive ? 'Stop Scraping' : 'Start Scraping';
   });
 });
