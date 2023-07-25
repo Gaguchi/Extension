@@ -26,6 +26,9 @@ function scrapeAndSendMessage() {
 
     // Push the object to the scrapedData array
     scrapedData.push(data);
+
+    // Reload the page after sending the data
+    window.location.reload()
   });
 
   // Send the scrapedData to the background script
