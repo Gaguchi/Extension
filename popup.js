@@ -1,68 +1,74 @@
-console.log("popup is running");
-
-// Function to fetch the scraped data from the background script and update the popup.html
-function fetchScrapedData() {
-  chrome.runtime.sendMessage({ getData: true }, function(response) {
-    if (chrome.runtime.lastError) {
-      console.error(chrome.runtime.lastError);
-      return;
-    }
-
-    console.log('Response received:', response); // Log the response to the console
-
-    if (response && response.data) {
-      const dataList = document.getElementById('data-list');
-      dataList.innerHTML = ''; // Clear the existing data list
-
-      response.data.forEach((item) => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `Listing ID: ${item.listingId}, Price: ${item.price}, Location: ${item.location}, Company Name: ${item.companyName}`;
-        dataList.appendChild(listItem);
+document.addEventListener("DOMContentLoaded", function() {
+    // Function to get the stored data
+    function getStoredData(callback) {
+      chrome.storage.local.get('scrapedData', function(result) {
+        callback(result.scrapedData || []);
       });
-    } else {
-      console.error('Invalid response received from the background script');
     }
-  });
-}
-
-// Initiate or stop the scraping
-function toggleScraping() {
-  chrome.storage.sync.get(['scrapingActive', 'scrapeTabId'], function(data) {
-    const isScrapingActive = data.scrapingActive;
-
-    if (!isScrapingActive) {
-      // Get the current active tab
-      chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        const currentTab = tabs[0];
-        
-        // Store the tab ID
-        chrome.storage.sync.set({ scrapeTabId: currentTab.id, scrapingActive: true });
-
-        // Create an alarm to initiate scraping at regular intervals
-        chrome.alarms.create('scrapeAlarm', { periodInMinutes: 0.1667 }); // 10 seconds
-
-        document.getElementById('scrape-button').textContent = 'Stop Scraping';
-      });
-    } else {
-      // Clear the stored tab ID and stop scraping
-      chrome.storage.sync.set({ scrapeTabId: null, scrapingActive: false });
-
-      // Clear the alarm
-      chrome.alarms.clear('scrapeAlarm');
-
-      document.getElementById('scrape-button').textContent = 'Start Scraping';
-    }
-  });
-}
-
-
-// Wait for the DOM to be fully loaded before adding the event listener
-document.addEventListener('DOMContentLoaded', function() {
-  // Fetch the scraped data from the background script when the popup is opened
-  fetchScrapedData();
   
-  // Add event listener to the "Scrape Data" button
-  document.getElementById('scrape-button').addEventListener('click', function() {
-    toggleScraping();
+    // Function to store the data
+    function storeData(data) {
+      chrome.storage.local.set({ 'scrapedData': data });
+    }
+  
+    // Function to clear all stored data
+    function clearStoredData() {
+      chrome.storage.local.remove('scrapedData');
+      updatePopup([]);
+    }
+  
+    document.getElementById('startButton').addEventListener('click', () => {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.tabs.sendMessage(tabs[0].id, 'start');
+      });
+    });
+  
+    document.getElementById('stopButton').addEventListener('click', () => {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.tabs.sendMessage(tabs[0].id, 'stop');
+      });
+    });
+  
+    // Update the popup with new data
+function updatePopup(data) {
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '';
+
+    data.forEach((entry) => {
+    const entryDiv = document.createElement('div');
+    entryDiv.textContent = `Listing ID: ${entry.listingId}, Price: ${entry.price}, Pickup Location: ${entry.pickupLocation}, Delivery Location: ${entry.deliveryLocation}, Company Name: ${entry.companyName}`;
+    resultsDiv.appendChild(entryDiv);
+    });
+}
+  
+    // Load and display the stored data on popup load
+    getStoredData(function(storedData) {
+      updatePopup(storedData);
+    });
+  
+    // Listen for messages from the content script
+    chrome.runtime.onMessage.addListener((message) => {
+      if (message.data) {
+        // Get the stored data
+        getStoredData(function(storedData) {
+          // Combine stored data with new data and remove duplicates
+          const newData = [...storedData, ...message.data];
+          const uniqueData = newData.filter((entry, index, self) =>
+            index === self.findIndex((e) => e.listingId === entry.listingId)
+          );
+  
+          // Store the updated data
+          storeData(uniqueData);
+  
+          // Update the popup with new data
+          updatePopup(uniqueData);
+        });
+      }
+    });
+  
+    // Clear stored data when the "Reset" button is clicked
+    document.getElementById('resetButton').addEventListener('click', () => {
+      clearStoredData();
+    });
   });
-});
+  

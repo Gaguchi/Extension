@@ -1,13 +1,20 @@
+<!-- popup.html -->
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Popup</title>
-  <script src="popup.js"></script>
+  <title>Central Dispatch Scraper</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body style="width: max-content;">
-  <h1>Scraped Data</h1>
-  <ul id="data-list"></ul>
-
-  <button id="scrape-button">Scrape Data</button>
+<body>
+  <div class="header">
+    <h1>Central Dispatch Scraper</h1>
+    <div class="buttons">
+      <button id="startButton">Start Scraping</button>
+      <button id="stopButton">Stop Scraping</button>
+      <button id="resetButton">Reset</button>
+    </div>
+  </div>
+  <div id="results"></div>
+  <script src="popup.js"></script>
 </body>
 </html>
