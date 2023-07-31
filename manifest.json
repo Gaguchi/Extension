@@ -1,22 +1,14 @@
 {
-    "manifest_version": 2,
-    "name": "Central Dispatch Scraper",
-    "version": "1.0",
-    "description": "Scrapes app.centraldispatch.com/search and sends notifications for new entries.",
-    "permissions": ["tabs", "notifications", "activeTab","storage"],
-    "content_scripts": [
-      {
-        "matches": ["https://app.centraldispatch.com/*"],
-        "js": ["content.js"],
-        "run_at": "document_end"
-      }
-    ],
-    "background": {
-      "scripts": ["background.js"],
-      "persistent": false
-    },
-    "browser_action": {
-      "default_popup": "popup.html"
-    }
+  "manifest_version": 2,
+  "name": "Cenatral Dispatch Scraper",
+  "version": "1.0",
+  "description": "Scrapes app.centraldispatch.com/search and sends notifications for new entries.",
+  "permissions": ["tabs", "notifications", "activeTab","storage","https://app.centraldispatch.com/search*"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
   }
-  
+}
