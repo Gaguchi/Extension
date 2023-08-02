@@ -1,0 +1,42 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    width: 300px;
+    padding: 10px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .header h1 {
+    margin: 0;
+    font-size: 20px;
+  }
+  
+  .buttons button {
+    margin-left: 5px;
+  }
+  
+  #results {
+    overflow-y: auto;
+    max-height: 300px;
+  }
+  
+  #results div {
+    padding: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+    border-radius: 5px;
+  }
+  
+  /* Optional: Add hover effects to buttons */
+  .buttons button:hover {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  

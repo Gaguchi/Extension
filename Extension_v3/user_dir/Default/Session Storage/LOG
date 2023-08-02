@@ -1,0 +1,11 @@
+2023/08/01-14:19:08.961 62f4 Reusing MANIFEST C:\Users\Boris\Downloads\extension\user_dir\Default\Session Storage/MANIFEST-000001
+2023/08/01-14:19:08.961 62f4 Recovering log #4
+2023/08/01-14:19:08.977 62f4 Level-0 table #7: started
+2023/08/01-14:19:08.993 62f4 Level-0 table #7: 1565465 bytes OK
+2023/08/01-14:19:08.994 62f4 Recovering log #6
+2023/08/01-14:19:08.995 62f4 Reusing old log C:\Users\Boris\Downloads\extension\user_dir\Default\Session Storage/000006.log 
+2023/08/01-14:19:08.997 62f4 Delete type=0 #4
+2023/08/01-14:19:19.557 62f0 Level-0 table #9: started
+2023/08/01-14:19:19.559 62f0 Level-0 table #9: 39093 bytes OK
+2023/08/01-14:19:19.560 62f0 Delete type=0 #6
+2023/08/01-14:21:42.039 62f0 Level-0 table #11: started
