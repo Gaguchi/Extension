@@ -1,68 +1,89 @@
-console.log("popup is running");
+console.log("popup.js: Script started");
 
-// Function to fetch the scraped data from the background script and update the popup.html
 function fetchScrapedData() {
+  console.log("popup.js: Fetching scraped data");
   chrome.runtime.sendMessage({ getData: true }, function(response) {
     if (chrome.runtime.lastError) {
-      console.error(chrome.runtime.lastError);
+      console.error("popup.js:", chrome.runtime.lastError);
       return;
     }
 
-    console.log('Response received:', response); // Log the response to the console
+    console.log('popup.js: Response received:', response);
 
     if (response && response.data) {
       const dataList = document.getElementById('data-list');
-      dataList.innerHTML = ''; // Clear the existing data list
-
+      dataList.innerHTML = '';
+      
       response.data.forEach((item) => {
         const listItem = document.createElement('li');
         listItem.textContent = `Listing ID: ${item.listingId}, Price: ${item.price}, Location: ${item.location}, Company Name: ${item.companyName}`;
         dataList.appendChild(listItem);
       });
     } else {
-      console.error('Invalid response received from the background script');
+      console.error('popup.js: Invalid response received from the background script');
     }
   });
 }
 
-// Initiate or stop the scraping
 function toggleScraping() {
+  console.log("popup.js: Toggling scraping");
   chrome.storage.sync.get(['scrapingActive', 'scrapeTabId'], function(data) {
     const isScrapingActive = data.scrapingActive;
 
     if (!isScrapingActive) {
-      // Get the current active tab
-      chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        const currentTab = tabs[0];
-        
-        // Store the tab ID
-        chrome.storage.sync.set({ scrapeTabId: currentTab.id, scrapingActive: true });
+      if (!data.scrapeTabId) {
+        console.log("popup.js: No scrapeTabId found, querying for active tab");
+        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+          if (!tabs || !tabs.length) {
+            console.error("popup.js: No active tab found");
+            return;
+          }
 
-        // Create an alarm to initiate scraping at regular intervals
-        chrome.alarms.create('scrapeAlarm', { periodInMinutes: 0.1667 }); // 10 seconds
+          const currentTab = tabs[0];
+          console.log("popup.js: Setting scrapeTabId to:", currentTab.id);
 
+          chrome.storage.sync.set({ scrapeTabId: currentTab.id, scrapingActive: true }, function() {
+            if (chrome.runtime.lastError) {
+              console.error("popup.js: Error while storing scrapeTabId:", chrome.runtime.lastError);
+              return;
+            }
+            
+            console.log("popup.js: scrapeTabId stored successfully");
+            chrome.alarms.create('scrapeAlarm', { periodInMinutes: 1 });
+            chrome.runtime.sendMessage({ startScraping: true });
+            document.getElementById('scrape-button').textContent = 'Stop Scraping';
+          });
+        });
+      } else {
+        console.log("popup.js: Found scrapeTabId, continuing scraping");
+        chrome.storage.sync.set({ scrapingActive: true });
+        chrome.alarms.create('scrapeAlarm', { periodInMinutes: 1 });
         document.getElementById('scrape-button').textContent = 'Stop Scraping';
-      });
+      }
     } else {
-      // Clear the stored tab ID and stop scraping
+      console.log("popup.js: Stopping scraping");
       chrome.storage.sync.set({ scrapeTabId: null, scrapingActive: false });
-
-      // Clear the alarm
+      document.getElementById('scrape-button').textContent = 'Start Scraping';
       chrome.alarms.clear('scrapeAlarm');
-
       document.getElementById('scrape-button').textContent = 'Start Scraping';
     }
   });
 }
 
 
-// Wait for the DOM to be fully loaded before adding the event listener
 document.addEventListener('DOMContentLoaded', function() {
-  // Fetch the scraped data from the background script when the popup is opened
+  console.log("popup.js: DOM loaded");
   fetchScrapedData();
-  
-  // Add event listener to the "Scrape Data" button
+  setButtonState();
   document.getElementById('scrape-button').addEventListener('click', function() {
     toggleScraping();
   });
 });
+
+// New function to set the button state on popup load
+function setButtonState() {
+  chrome.storage.sync.get(['scrapingActive'], function(data) {
+    const isScrapingActive = data.scrapingActive;
+    document.getElementById('scrape-button').textContent = isScrapingActive ? 'Stop Scraping' : 'Start Scraping';
+  });
+}

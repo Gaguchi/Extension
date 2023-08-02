@@ -3,11 +3,11 @@
   "name": "Listing Checker",
   "version": "1.0",
   "permissions": [
+    "tabs",
     "activeTab",
     "scripting",
     "storage",
-    "alarms",
-    "tabs"
+    "alarms"
   ],
   "action": {
     "default_popup": "popup.html",
