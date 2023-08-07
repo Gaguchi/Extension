@@ -15,7 +15,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         type: 'basic',
         iconUrl: 'notification_icon.png',
         title: 'New Entry Found!',
-        message: `New entry with Listing ID: ${newData[0].listingId}`,
+        message: `Price: ${newData[0].price}, Pickup: ${newData[0].pickupLocation}, Delivery: ${newData[0].deliveryLocation}`,
       });
 
       // Play the notification sound
@@ -27,6 +27,31 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
+
+// Listen for the resizeWindowToFullScreenSize action from the content script
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "resizeWindowToFullScreenSize") {
+    // Get the current window
+    chrome.windows.getCurrent({}, (window) => {
+      // If the window is in fullscreen mode, set it to normal state first
+      if (window.state === 'fullscreen') {
+        chrome.windows.update(window.id, { state: 'normal' }, () => {
+          // Then resize the window to the screen's dimensions
+          chrome.windows.update(window.id, {
+            width: window.screen.availWidth,
+            height: window.screen.availHeight
+          });
+        });
+      } else {
+        // If the window is not in fullscreen mode, directly resize it
+        chrome.windows.update(window.id, {
+          width: window.screen.availWidth,
+          height: window.screen.availHeight
+        });
+      }
+    });
+  }
+});
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === "complete") {
     var runningTabId;

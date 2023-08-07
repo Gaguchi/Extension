@@ -1,2 +1,3 @@
-2023/08/01-14:11:47.455 5b00 Creating DB C:\Users\Boris\Downloads\extension\user_dir\Default\shared_proto_db since it was missing.
-2023/08/01-14:11:47.535 5b00 Reusing MANIFEST C:\Users\Boris\Downloads\extension\user_dir\Default\shared_proto_db/MANIFEST-000001
+2023/08/07-17:18:22.363 5d28 Reusing MANIFEST E:\Work\WebDev\Extension\Extension_v3\user_dir\Default\shared_proto_db/MANIFEST-000001
+2023/08/07-17:18:22.363 5d28 Recovering log #3
+2023/08/07-17:18:22.364 5d28 Reusing old log E:\Work\WebDev\Extension\Extension_v3\user_dir\Default\shared_proto_db/000003.log 

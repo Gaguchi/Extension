@@ -1,5 +1,8 @@
 // content_script.js
 
+// Send a message to the background script to resize the window
+chrome.runtime.sendMessage({action: "resizeWindowToFullScreenSize"});
+
 try{
   var intervalTime = 10000; // 10 seconds
   var scrapingIntervalId;
