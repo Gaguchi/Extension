@@ -16,6 +16,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         iconUrl: 'notification_icon.png',
         title: 'New Entry Found!',
         message: `Price: ${newData[0].price}, Pickup: ${newData[0].pickupLocation}, Delivery: ${newData[0].deliveryLocation}`,
+        requireInteraction: true // This line makes the notification permanent unless closed by the user
       });
 
       // Play the notification sound

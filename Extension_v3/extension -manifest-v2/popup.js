@@ -87,6 +87,19 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("resetButton").addEventListener("click", () => {
     clearStoredData();
   });
+
+  // Get the saved reload interval and populate the input field
+  chrome.storage.local.get("reloadInterval", function(result) {
+    document.getElementById("reload-interval").value = result.reloadInterval || "";
+  });
+
+  // Add event listener for the "Save" button to save the reload interval
+  document.getElementById("save-interval").addEventListener("click", function() {
+    const reloadInterval = document.getElementById("reload-interval").value;
+    chrome.storage.local.set({ reloadInterval: reloadInterval }, function() {
+      alert("Reload interval saved!");
+    });
+  });
 });
 
 // Listen for the onUpdated event to send the message after the new tab has loaded

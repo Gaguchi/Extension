@@ -1,5 +1,8 @@
-2023/08/07-17:22:36.558 4518 Reusing MANIFEST E:\Work\WebDev\Extension\Extension_v3\user_dir\Default\Session Storage/MANIFEST-000001
-2023/08/07-17:22:36.558 4518 Recovering log #35
-2023/08/07-17:22:36.559 4518 Reusing old log E:\Work\WebDev\Extension\Extension_v3\user_dir\Default\Session Storage/000035.log 
-2023/08/07-17:22:43.452 5e24 Level-0 table #39: started
-2023/08/07-17:22:44.322 5e24 Level-0 table #39: 48064 bytes OK
+2023/08/11-23:15:31.831 54f8 Reusing MANIFEST E:\Work\WebDev\Extension\Extension_v3\user_dir\Default\Session Storage/MANIFEST-000001
+2023/08/11-23:15:31.831 54f8 Recovering log #44
+2023/08/11-23:15:31.832 54f8 Reusing old log E:\Work\WebDev\Extension\Extension_v3\user_dir\Default\Session Storage/000044.log 
+2023/08/11-23:16:05.640 5e2c Level-0 table #48: started
+2023/08/11-23:16:05.665 5e2c Level-0 table #48: 38857 bytes OK
+2023/08/11-23:16:05.677 5e2c Delete type=0 #44
+2023/08/11-23:18:50.324 5e2c Level-0 table #50: started
+2023/08/11-23:18:51.430 5e2c Level-0 table #50: 1569311 bytes OK
