@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+<head>
+    <title>Title of the extension</title>
+    <link href="../css/main.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap-tagsinput.css" rel="stylesheet" type="text/css">
+    <link href="../css/select2.css" rel="stylesheet"/>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/bootstrap-tagsinput.js"></script>
+    <script src="../js/select2.js"></script>
+    <script src="../js/select2code.js"></script>
+</head>
+<body>
+    <div id="step-1">
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Log in </h3>
+                </div>
+                <div class="panel-body">
+                    <div id="txtLoginMsg" style="color: red;margin-bottom: 5px;"></div>
+                    <form>
+                        <div class="form-group">
+                            <input class="form-control" id="txtEmail" placeholder="Email ID" required type="email"/>
+                        </div>
+                        <div class="form-group">
+                            <input class="btn btn-primary btn-block" id="btnLogin" type="submit" value="Login"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="step-2">
+        <ul class="nav nav-tabs" id="main-nav">
+            <li class="active">
+                <a href="#home">
+                    <span class="glyphicon glyphicon-home"></span>
+                </a>
+            </li>
+            <li>
+                <a href="#settings">
+                    <span class="glyphicon glyphicon-wrench"></span>
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="home">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Home</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-item">
+                            <label>Refresh Time :
+                                <span id="homerefresh">10</span>
+                            </label>
+                        </div>
+                        <div class="form-item">
+                            <label>From States :
+                                <span id="states_from_home"></span>
+                            </label>
+                        </div>
+                        <div class="form-item">
+                            <label>To States :
+                                <span id="states_to_home"></span>
+                            </label>
+                        </div>
+                        <div class="form-item">
+                            <label>Zip From :
+                                <span id="zip_from_home"></span>
+                            </label>
+                        </div>
+                        <div class="form-item">
+                            <label>Zip To :
+                                <span id="zip_to_home"></span>
+                            </label>
+                        </div>
+                        <div class="form-item">
+                            <label>Excluded order IDs :
+                                <span id="excluded_ids_home"></span>
+                            </label>
+                        </div>
+                        <div class="form-item">
+                            <label>Min Payout :
+                                <span id="min_amount_view"></span>
+                            </label>
+                        </div>
+                        <button class="btn btn-success save-settings" id="start" type="button">START</button>
+                        <button class="btn btn-warning" id="stop" type="button">STOP</button>
+                        <button class="btn btn-info" id="cacheReset" type="button">Restart</button>
+                        <div id="startInformation"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- The settings pane, expand at will -->
+            <div class="tab-pane" id="settings">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Settings</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form class="settings">
+                            <div class="form-item">
+                                <label for="refresh_time">Refresh Time</label>
+                                <div class="input-group">
+                                    <select id="refresh_time">
+                                        <option value="1">1 seconds</option>
+                                        <option value="1.5">1.5 seconds</option>
+                                        <option value="2">2 seconds</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-item">
+                                <label for="is_random">Random Time?</label>
+                                <input id="is_random" type="checkbox">
+                            </div>
+                            <br/>
+                            <div class="form-item">
+                                <label for="states_from">States From</label>
+                                <select id="states_from" multiple="multiple"></select>
+                            </div>
+                            <br/>
+                            <div class="form-item">
+                                <label for="zip_from">Zipcode From</label>
+                                <select id="zip_from" multiple="multiple"></select>
+                            </div>
+                            <br/>
+                            <div class="form-item">
+                                <label for="states_to">States To</label>
+                                <select id="states_to" multiple="multiple"></select>
+                            </div>
+                            <br/>
+                            <div class="form-item">
+                                <label for="zip_to">Zipcode To</label>
+                                <select id="zip_to" multiple="multiple"></select>
+                            </div>
+                            <br/>
+                            <div class="form-item">
+                                <label for="excluded_ids">Order IDs to exclude</label>
+                                <select id="excluded_ids" multiple="multiple"></select>
+                            </div>
+                            <br/>
+                            <div class="form-item">
+                                <div class="form-item">
+                                    <label for="stage_limit">Stage Limit</label>
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <button class="quantity-left-minus_stage btn btn-danger btn-number"
+                                                    data-field="" data-type="minus" type="button">
+                                                <span class="glyphicon glyphicon-minus"></span>
+                                            </button>
+                                        </span>
+                                        <input class="form-control input-number" id="stage_limit" max="100" min="1"
+                                               name="stage_limit" type="text" value="1">
+                                        <span class="input-group-btn">
+                                            <button class="quantity-right-plus_stage btn btn-success btn-number"
+                                                    data-field="" data-type="plus" type="button">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="form-item">
+                                    <label for="min_amount">Min Payout ($)</label>
+                                    <input id="min_amount" min="0" type="number">
+                                </div>
+                                <br/>
+                                <div class="form-item">
+                                    <button class="btn btn-success save-settings" id="save-settings" type="button">Save
+                                    </button>
+                                    <button class="btn btn-warning cancel-settings" type="button">Cancel</button>
+                                </div>
+                                <div id="information"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/settings.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

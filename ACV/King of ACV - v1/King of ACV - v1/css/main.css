@@ -1,0 +1,58 @@
+/**
+ * Custom CSS may be added here.
+ */
+body {
+  min-width: 357px;
+  min-height: 250px;
+  overflow-x: hidden;
+  padding-top: 10px;
+}
+
+.tab-pane {
+  padding-top: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.line {
+  font-weight: bold;
+  text-align: center;
+}
+
+.button-wrapper {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+form.settings label{
+ width: 100px;
+ display: block;
+ float: left;
+}
+
+form.settings .form-item{
+  clear: both;
+}
+
+span.select2-selection.select2-selection--multiple {
+    width: 200px;
+}
+
+div#information {
+    margin-top: 15px;
+}
+div#startInformation {
+    margin-top: 15px;
+}
+
+#min_amount {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+#min_amount:hover,
+#min_amount:focus,
+#min_amount:active {
+    border: 1px solid #ccc;
+}
